@@ -1,0 +1,68 @@
+{% extends 'main.html' %}
+{% block content %}
+
+<div class="content-wrapper">
+    <div class="modal-body row">
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Оригинальное изображение </h5>
+                    <img class="card-img-bottom" src="{{image}}" alt="Image">
+                    <br>
+                </div>
+            </div>
+            <br>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Найденная маска </h5>
+                    <img class="card-img-bottom" src="{{det}}" alt="Image">
+                    <br>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="page-content page-container" id="page-content">
+                <div class="padding">
+                    <div class="row container d-flex justify-content-center">
+
+                        <div class="col-lg-8 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">История</h4>
+                                    <p class="card-description">
+                                        Обнаруженные дефекты
+                                    </p>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Дата</th>
+                                                    <th>Дефект</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody style="overflow:scroll">
+                                                {% for row in db_data %}
+                                                <tr>
+                                                    <td>{{row[0]}}</td>
+                                                    <td>{{row[1]}}</td>
+                                                </tr>
+                                                
+                                                {% endfor %}
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

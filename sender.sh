@@ -1,0 +1,1 @@
+curl -X POST -H "Content-Type: multipart/form-data" http://localhost:5000/api -F "file=@$1"
