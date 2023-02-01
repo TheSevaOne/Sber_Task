@@ -59,3 +59,18 @@ class SegmenterModel(nn.Module):
     
         y = self.forward(x.unsqueeze(0).cuda())
         return (y > 0).squeeze(0).squeeze(0).float().cuda()
+
+
+
+def inference_forward(image,model,targets=None):
+        if targets is None:
+            targets_shape = list(image.shape) 
+            targets_shape[1] = 4
+            targets = torch.zeros(*targets_shape)
+            image = image.to('cuda:0')
+            outputs = model(image)
+            loss = None
+            outputs= torch.sigmoid( outputs )
+            outputs = outputs.detach().cpu().numpy()
+        
+        return loss, outputs

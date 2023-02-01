@@ -9,6 +9,7 @@ import utils
 import shutil
 from PIL import Image as im
 from  torchvision.utils import save_image
+from Net import inference_forward
 app = Flask(__name__)   
 mean_in=(0.485, 0.456, 0.406),
 std_in=(0.229, 0.224, 0.225)
@@ -28,9 +29,10 @@ def main():
     file=utils.chooseRandomImage('../train_images')
     shutil.copy('../train_images/'+file, 'static/uploads')
     input_tensor = transform('static/uploads/'+file,'web')
-    prediction = get_prediction(input_tensor)
-    answer,rle=utils.runner(prediction,"web")
-    f=utils.process_out(file,rle)
+    _,prediction = inference_forward(input_tensor,model)
+   
+    answer,mask=utils.runner(prediction,"web")
+    f=utils.process_out(file,mask)
     
     curs.execute("INSERT INTO history ('time','defect') VALUES (?, ?)",(str(time),str(answer)))
     conn.commit()
@@ -49,18 +51,15 @@ def predict():
         file = request.files['file']
         if file is not None:
             input_tensor = transform(file,'api')
-            prediction = get_prediction(input_tensor)
+            _,prediction = inference_forward(input_tensor,model)
             answer,_=utils.runner(prediction,"api")
+
+            
             curs.execute("INSERT INTO history ('time','defect') VALUES (?, ?)",(str(time),str(answer)))
         return jsonify({str(time):answer}) 
 
 
-def get_prediction(input_tensor):
-    print(input_tensor.to("cuda:0").size()) 
-    outputs = model.forward(input_tensor.to("cuda:0")) 
-    outputs = torch.sigmoid(outputs)
-    outputs = outputs.detach().cpu().numpy()
-    return outputs
+
 
 
 def transform(file,type):
