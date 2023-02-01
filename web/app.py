@@ -38,7 +38,7 @@ def main():
 
     rows = curs.fetchall()
     
-    return render_template('index.html',det=f,image="static/uploads/"+file,db_data=rows,)
+    return render_template('index.html',det=f,image="static/uploads/"+file,db_data=rows)
 
 
 @app.route('/api', methods=['POST'])
